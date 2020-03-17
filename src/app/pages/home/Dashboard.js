@@ -11,11 +11,6 @@ import QuickStatsChart from "../../widgets/QuickStatsChart";
 import OrderStatisticsChart from "../../widgets/OrderStatisticsChart";
 import OrdersWidget from "../../widgets/OrdersWidget";
 import SalesBarChart from "../../widgets/SalesBarChart";
-import DownloadFiles from "../../widgets/DownloadFiles";
-import NewUsers from "../../widgets/NewUsers";
-import LatestUpdates from "../../widgets/LatestUpdates";
-import BestSellers from "../../widgets/BestSellers";
-import RecentActivities from "../../widgets/RecentActivities";
 import PortletHeaderDropdown from "../../partials/content/CustomDropdowns/PortletHeaderDropdown";
 
 export default function Dashboard() {
@@ -171,34 +166,6 @@ export default function Dashboard() {
           </div>
         </PortletBody>
       </Portlet>
-
-      <div className="row">
-        <div className="col-xl-4">
-          <DownloadFiles />
-        </div>
-        <div className="col-xl-4">
-          <NewUsers />
-        </div>
-        <div className="col-xl-4">
-          <LatestUpdates />
-        </div>
-      </div>
-
-      {/* <div className="row">
-        <div className="col-xl-8"></div>
-        <div className="col-xl-4">
-          <AuthorsProfit />
-        </div>
-      </div> */}
-
-      <div className="row">
-        <div className="col-xl-8">
-          <BestSellers />
-        </div>
-        <div className="col-xl-4">
-          <RecentActivities />
-        </div>
-      </div>
     </>
   );
 }
