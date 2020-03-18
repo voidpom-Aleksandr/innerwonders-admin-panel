@@ -36,8 +36,16 @@ export default {
             {
                 title: "Intro Video Upload",
                 root: true,
-                icon: "flaticon2-menu-4",
+                icon: "flaticon2-cd",
                 page: "introVideoUpload",
+                bullet: "dot",
+                role: ['admin']
+            },
+            {
+                title: "Pod Cast",
+                root: true,
+                icon: "flaticon2-speaker",
+                page: "podcast",
                 bullet: "dot",
                 role: ['admin']
             }
@@ -80,8 +88,16 @@ export default {
             {
                 title: "Intro Video Upload",
                 root: true,
-                icon: "flaticon2-menu-4",
+                icon: "flaticon2-cd",
                 page: "introVideoUpload",
+                bullet: "dot",
+                role: ['admin']
+            },
+            {
+                title: "Pod Cast",
+                root: true,
+                icon: "flaticon2-speaker",
+                page: "podcast",
                 bullet: "dot",
                 role: ['admin']
             }

@@ -157,8 +157,6 @@ const useStyles3 = makeStyles(theme => ({
 }));
 
 export default function Users() {
-    const constantForEffect = true;
-
     // Example 3
     const classes3 = useStyles3();
     const [order3, setOrder3] = React.useState("desc");

@@ -5,6 +5,7 @@ import Users from './users';
 import VideoUpload from './videoUpload';
 import InstructorVideoUpload from './instructorVideoUpload';
 import IntroVideoUpload from './introVideoUpload';
+import PodCast from './podCast';
 import Dashboard from "./Dashboard";
 import { LayoutSplashScreen } from "../../../_metronic";
 
@@ -36,6 +37,7 @@ export default class extends React.Component {
                     <Route path="/videoUpload" component={requireAdmin(VideoUpload)} />
                     <Route path="/instructorVideoUpload" component={requireInstructor(InstructorVideoUpload)} />
                     <Route path="/introVideoUpload" component={requireAdmin(IntroVideoUpload)} />
+                    <Route path="/podcast" component={requireAdmin(PodCast)} />
                     <Route path="/dashboard" component={Dashboard} />
                     <Redirect to="/dashboard" />
                 </Switch>

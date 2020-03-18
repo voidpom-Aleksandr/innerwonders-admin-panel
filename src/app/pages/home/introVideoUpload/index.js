@@ -44,7 +44,7 @@ class IntroVideoUpload extends Component {
         };
     }
 
-    // handle hover cource
+    // handle hover video
     handleHoverVideo = (key) => {
         this.setState({
             hoveredVideoKey: key
@@ -201,7 +201,6 @@ class IntroVideoUpload extends Component {
                                     return (
                                         <ListItem key={value.key} button
                                             alignItems="flex-start"
-                                            style={{ borderLeft: (value.status ? "solid 3px" : 'none') }}
                                             onMouseOver={this.handleHoverVideo.bind(this, value.key)}
                                         >
                                             <ListItemAvatar>

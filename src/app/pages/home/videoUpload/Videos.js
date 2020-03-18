@@ -308,7 +308,6 @@ class Videos extends Component {
                                     return (
                                         <ListItem key={value.key} button
                                             alignItems="flex-start"
-                                            style={{ borderLeft: (value.status ? "solid 3px" : 'none') }}
                                             onMouseOver={this.handleHoverVideo.bind(this, value.key)}
                                         >
                                             <ListItemAvatar>
