@@ -82,7 +82,18 @@ function Login(props) {
                                     .then((res) => {
                                         disableLoading();
                                         const { email, emailVerified, refreshToken } = res.user;
-                                        props.login({ email, emailVerified, refreshToken });
+                                        
+                                        firebase.auth().currentUser.getIdTokenResult().then(result => {
+                                            if (result.claims && (result.claims.role === "admin" || result.claims.role === 'instructor')) {
+                                                props.login({ email, emailVerified, refreshToken, role: result.claims.role });
+                                            } else {
+                                                firebase
+                                                    .auth()
+                                                    .signOut()
+                                                    .then(() => {})
+                                                    .catch(() => {});
+                                            }
+                                        });
                                     })
                                     .catch((err) => {
                                         disableLoading();

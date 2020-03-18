@@ -7,6 +7,9 @@ import {
     lighten,
 } from "@material-ui/core/styles";
 import {
+    ButtonGroup,
+    Checkbox,
+    IconButton,
     Paper,
     Table,
     TableHead,
@@ -17,8 +20,19 @@ import {
     Typography,
     TableSortLabel,
     TablePagination,
+    Tooltip
 } from "@material-ui/core";
+
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+
+import moment from 'moment';
 import instance from '../../../services/instance';
+import firebase from '../../../services/firebase';
+
+import UserForm from './UserForm';
+import { CustomSnackbar, customConfirm, customConfirmClose } from "../../../services";
 
 // Example 3
 function desc3(a, b, orderBy) {
@@ -56,11 +70,8 @@ const headRows3 = [
 
 function EnhancedTableHead3(props) {
     const {
-        // onSelectAllClick,
         order,
         orderBy,
-        // numSelected,
-        // rowCount,
         onRequestSort
     } = props;
     const createSortHandler = property => event => {
@@ -70,14 +81,11 @@ function EnhancedTableHead3(props) {
     return (
         <TableHead>
             <TableRow>
-                {/* <TableCell padding="checkbox">
+                <TableCell padding="checkbox">
                     <Checkbox
-                        indeterminate={numSelected > 0 && numSelected < rowCount}
-                        checked={numSelected === rowCount && rowCount !== 0}
-                        onChange={onSelectAllClick}
-                        inputProps={{ "aria-label": "Select all desserts" }}
+                        indeterminate={true}
                     />
-                </TableCell> */}
+                </TableCell>
                 {headRows3.map(row => (
                     <TableCell
                         key={row.id}
@@ -100,12 +108,9 @@ function EnhancedTableHead3(props) {
 }
 
 EnhancedTableHead3.propTypes = {
-    numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.string.isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired
+    orderBy: PropTypes.string.isRequired
 };
 
 const useToolbarStyles3 = makeStyles(theme => ({
@@ -134,55 +139,6 @@ const useToolbarStyles3 = makeStyles(theme => ({
     }
 }));
 
-const EnhancedTableToolbar3 = props => {
-    const classes = useToolbarStyles3();
-    const { numSelected } = props;
-
-    return (
-        <Toolbar
-            className={clsx(classes.root, {
-                [classes.highlight]: numSelected > 0
-            })}
-        >
-            <div className={classes.title}>
-                {/* {numSelected > 0 ? (
-                    <Typography color="inherit" variant="subtitle1"> {numSelected} selected </Typography>
-                ) : (
-                        <Typography variant="h6" id="tableTitle"> Users </Typography>
-                        )} */}
-                <Typography variant="h6" id="tableTitle"> Users </Typography>
-            </div>
-            <div className={classes.spacer} />
-            <div className={classes.actions}>
-                {/* {numSelected > 0 ? (
-                    <ButtonGroup>
-                        <Tooltip title="Edit">
-                            <IconButton aria-label="Edit">
-                                <EditIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete">
-                            <IconButton aria-label="Delete">
-                                <DeleteIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </ButtonGroup>
-                ) : (
-                        <Tooltip title="Filter list">
-                            <IconButton aria-label="Filter list">
-                                <FilterListIcon />
-                            </IconButton>
-                        </Tooltip>
-                    )} */}
-            </div>
-        </Toolbar>
-    );
-};
-
-EnhancedTableToolbar3.propTypes = {
-    numSelected: PropTypes.number.isRequired
-};
-
 const useStyles3 = makeStyles(theme => ({
     root: {
         width: "100%",
@@ -207,44 +163,26 @@ export default function Users() {
     const classes3 = useStyles3();
     const [order3, setOrder3] = React.useState("desc");
     const [orderBy3, setOrderBy3] = React.useState("emailVerified");
-    const [selected3, setSelected3] = React.useState([]);
+
+    const [selectedRowId, selectRow] = React.useState('');
+
     const [page3, setPage3] = React.useState(0);
     const [dense3] = React.useState(false);
     const [rowsPerPage3, setRowsPerPage3] = React.useState(5);
     const [rows, setRows] = React.useState([]);
 
+    const [editModalOpen, setModalOpen] = React.useState(false);
+    const [modalInitialValues, setModalInitialValues] = React.useState({});
+
+    function setModalOpenToClose() {
+        getUserList();
+        setModalOpen(false);
+    }
+
     function handleRequestSort3(event, property) {
         const isDesc = orderBy3 === property && order3 === "desc";
         setOrder3(isDesc ? "asc" : "desc");
         setOrderBy3(property);
-    }
-
-    function handleSelectAllClick3(event) {
-        if (event.target.checked) {
-            const newSelecteds = rows.map(n => n.email);
-            setSelected3(newSelecteds);
-            return;
-        }
-        setSelected3([]);
-    }
-
-    function handleClick3(event, name) {
-        const selectedIndex = selected3.indexOf(name);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected3, name);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected3.slice(1));
-        } else if (selectedIndex === selected3.length - 1) {
-            newSelected = newSelected.concat(selected3.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected3.slice(0, selectedIndex),
-                selected3.slice(selectedIndex + 1)
-            );
-        }
-        setSelected3(newSelected);
     }
 
     function handleChangePage3(event, newPage) {
@@ -255,30 +193,104 @@ export default function Users() {
         setRowsPerPage3(+event.target.value);
     }
 
-    const isSelected3 = name => selected3.indexOf(name) !== -1;
-
     const emptyRows3 =
         rowsPerPage3 - Math.min(rowsPerPage3, rows.length - page3 * rowsPerPage3);
 
+    function handleAddUser() {
+        setModalInitialValues({
+            uid: '',
+            email: '',
+            role: 'user'
+        });
+        setModalOpen(true);
+    }
+
+    function handleEditUserInfo() {
+        instance.get('users/' + selectedRowId)
+            .then(res => {
+                setModalInitialValues(res.data.user);
+                setModalOpen(true);
+            });
+    }
+
+    function handleDeleteUserInfo() {
+        customConfirm({
+            title: "Do you really wanna delete this user ?",
+            okLabel: "Delete",
+            autoClose: false
+        }, (confirmId) => {
+            instance.delete("users/" + selectedRowId)
+                .then(res => {
+                    customConfirmClose(confirmId);
+                    CustomSnackbar.success("Successfully deleted a user");
+                });
+        });
+    }
+
+    function getUserList() {
+        firebase.auth().currentUser.getIdToken().then((token) => {
+            instance.get('users')
+                .then(response => {
+                    setRows(response.data.users);
+                })
+                .catch(err => {
+                    console.log("An error has been occured on Server Response");
+                });
+        });
+    }
 
     useEffect(() => {
-        instance.get('getUserList')
-            .then(response => {
-                setRows(response.data.users);
-            })
-            .catch(err => {
-                console.log("An error has been occured on Server Response");
-            });
-    }, [constantForEffect]);
+        getUserList();
+    }, []);
 
 
+    const classesToolbar = useToolbarStyles3();
     return (
         <>
             <div className="row">
                 <div className="col-md-12">
                     <div className={classes3.root}>
                         <Paper className={classes3.paper}>
-                            <EnhancedTableToolbar3 numSelected={selected3.length} />
+                            <Toolbar
+                                className={clsx(classesToolbar.root, {
+                                    [classesToolbar.highlight]: true
+                                })}
+                            >
+                                <div className={classesToolbar.title}>
+                                    <Typography variant="h6" id="tableTitle"> Users </Typography>
+                                </div>
+
+                                <div className={classesToolbar.spacer} />
+
+                                <div className={classesToolbar.actions}>
+                                    {Boolean(selectedRowId) ? (
+                                        <ButtonGroup>>
+                                            <Tooltip title="Add">
+                                                <IconButton aria-label="Add" onClick={handleAddUser}>
+                                                    <AddIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Edit">
+                                                <IconButton aria-label="Edit" onClick={handleEditUserInfo}>
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Delete">
+                                                <IconButton aria-label="Delete" onClick={handleDeleteUserInfo}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </ButtonGroup>
+                                    ) : (
+                                            <Tooltip title="Add">
+                                                <IconButton aria-label="Add" onClick={handleAddUser}>
+                                                    <AddIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        )}
+                                </div>
+                            </Toolbar>
+
                             <div className={classes3.tableWrapper}>
                                 <Table
                                     className={classes3.table}
@@ -286,12 +298,9 @@ export default function Users() {
                                     size={dense3 ? "small" : "medium"}
                                 >
                                     <EnhancedTableHead3
-                                        numSelected={selected3.length}
                                         order={order3}
                                         orderBy={orderBy3}
-                                        onSelectAllClick={handleSelectAllClick3}
                                         onRequestSort={handleRequestSort3}
-                                        rowCount={rows.length}
                                     />
                                     <TableBody>
                                         {stableSort3(rows, getSorting(order3, orderBy3))
@@ -300,14 +309,14 @@ export default function Users() {
                                                 page3 * rowsPerPage3 + rowsPerPage3
                                             )
                                             .map((row, index) => {
-                                                const isItemSelected = isSelected3(row.email);
+                                                const isItemSelected = selectedRowId === row.uid;
                                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                                 return (
                                                     <TableRow
                                                         hover
                                                         onClick={event =>
-                                                            handleClick3(event, row.email)
+                                                            selectRow(row.uid)
                                                         }
                                                         role="checkbox"
                                                         aria-checked={isItemSelected}
@@ -315,14 +324,14 @@ export default function Users() {
                                                         key={row.email}
                                                         selected={isItemSelected}
                                                     >
-                                                        {/* <TableCell padding="checkbox">
+                                                        <TableCell padding="checkbox">
                                                             <Checkbox
                                                                 checked={isItemSelected}
                                                                 inputProps={{
                                                                     "aria-labelledby": labelId
                                                                 }}
                                                             />
-                                                        </TableCell> */}
+                                                        </TableCell>
 
                                                         <TableCell component="th" id={labelId} scope="row">
                                                             {row.email}
@@ -330,9 +339,9 @@ export default function Users() {
 
                                                         <TableCell align="left"> {row.emailVerified ? 'Yes' : 'No'} </TableCell>
 
-                                                        <TableCell align="left">{row.metadata.creationTime}</TableCell>
+                                                        <TableCell align="left">{moment(row.metadata.creationTime).format('YYYY-MM-DD HH:ss')}</TableCell>
 
-                                                        <TableCell align="left">{row.metadata.lastSignInTime}</TableCell>
+                                                        <TableCell align="left">{row.metadata.lastSignInTime ? moment(row.metadata.lastSignInTime).format('YYYY-MM-DD HH:ss') : 'Never yet'}</TableCell>
                                                     </TableRow>
                                                 );
                                             })}
@@ -362,7 +371,12 @@ export default function Users() {
                         </Paper>
                     </div>
                 </div>
-            </div >
+            </div>
+
+            <UserForm
+                open={editModalOpen}
+                onClose={setModalOpenToClose}
+                modalInitialValues={modalInitialValues} />
         </>
     );
 };

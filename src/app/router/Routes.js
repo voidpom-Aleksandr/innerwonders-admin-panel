@@ -17,36 +17,36 @@ import Layout from "../../_metronic/layout/Layout";
 import * as routerHelpers from "../router/RouterHelpers";
 
 export const Routes = withRouter(({ history }) => {
-  const lastLocation = useLastLocation();
-  routerHelpers.saveLastLocation(lastLocation);
-  const { isAuthorized, menuConfig, userLastLocation } = useSelector(
-    ({ auth, firebaseReducer, urls, builder: { menuConfig } }) => ({
-      menuConfig,
-    //   isAuthorized: auth.user != null,
-      isAuthorized: firebaseReducer.auth.isLoaded && !firebaseReducer.auth.isEmpty,
-      userLastLocation: routerHelpers.getLastLocation()
-    }),
-    shallowEqual
-  );
+    const lastLocation = useLastLocation();
+    routerHelpers.saveLastLocation(lastLocation);
+    const { isAuthorized, menuConfig, userLastLocation } = useSelector(
+        ({ auth, firebaseReducer, urls, builder: { menuConfig } }) => ({
+            menuConfig,
+            //   isAuthorized: auth.user != null,
+            isAuthorized: firebaseReducer.auth.isLoaded && !firebaseReducer.auth.isEmpty,
+            userLastLocation: routerHelpers.getLastLocation()
+        }),
+        shallowEqual
+    );
 
-  return (
-    /* Create `LayoutContext` from current `history` and `menuConfig`. */
-    <LayoutContextProvider history={history} menuConfig={menuConfig}>
-      <Switch>
-        <Route path="/logout" component={LogoutPage} />
+    return (
+        /* Create `LayoutContext` from current `history` and `menuConfig`. */
+        <LayoutContextProvider history={history} menuConfig={menuConfig}>
+            <Switch>
+                <Route path="/logout" component={LogoutPage} />
 
-        {!isAuthorized ? (
-          /* Redirect to `/auth` when user is not authorized */
-          <>
-            <Route path="/auth" component={AuthPage} />
-            <Redirect to="/auth/login" />
-          </>
-        ) : (
-          <Layout>
-            <HomePage userLastLocation={userLastLocation} />
-          </Layout>
-        )}
-      </Switch>
-    </LayoutContextProvider>
-  );
+                {!isAuthorized ? (
+                    /* Redirect to `/auth` when user is not authorized */
+                    <>
+                        <Route path="/auth" component={AuthPage} />
+                        <Redirect to="/auth/login" />
+                    </>
+                ) : (
+                        <Layout>
+                            <HomePage userLastLocation={userLastLocation} />
+                        </Layout>
+                    )}
+            </Switch>
+        </LayoutContextProvider>
+    );
 });

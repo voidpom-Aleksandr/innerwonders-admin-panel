@@ -14,28 +14,32 @@ export default {
                 root: true,
                 icon: "flaticon2-avatar",
                 page: "users",
-                bullet: "dot"
+                bullet: "dot",
+                role: ['admin']
             },
             {
                 title: "Video Upload",
                 root: true,
                 icon: "flaticon2-menu-4",
                 page: "videoUpload",
-                bullet: "dot"
+                bullet: "dot",
+                role: ['admin']
             },
             {
                 title: "Instructor Video Upload",
                 root: true,
                 icon: "flaticon2-menu-4",
                 page: "instructorVideoUpload",
-                bullet: "dot"
+                bullet: "dot",
+                role: ['instructor']
             },
             {
                 title: "Intro Video Upload",
                 root: true,
                 icon: "flaticon2-menu-4",
                 page: "introVideoUpload",
-                bullet: "dot"
+                bullet: "dot",
+                role: ['admin']
             }
         ]
     },
@@ -54,28 +58,32 @@ export default {
                 root: true,
                 icon: "flaticon2-avatar",
                 page: "users",
-                bullet: "dot"
+                bullet: "dot",
+                role: ['admin']
             },
             {
                 title: "Video Upload",
                 root: true,
                 icon: "flaticon2-menu-4",
                 page: "videoUpload",
-                bullet: "dot"
+                bullet: "dot",
+                role: ['admin']
             },
             {
                 title: "Instructor Video Upload",
                 root: true,
                 icon: "flaticon2-menu-4",
                 page: "instructorVideoUpload",
-                bullet: "dot"
+                bullet: "dot",
+                role: ['instructor']
             },
             {
                 title: "Intro Video Upload",
                 root: true,
                 icon: "flaticon2-menu-4",
                 page: "introVideoUpload",
-                bullet: "dot"
+                bullet: "dot",
+                role: ['admin']
             }
         ]
     }
