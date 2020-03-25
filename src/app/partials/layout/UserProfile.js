@@ -25,11 +25,11 @@ class UserProfile extends React.Component {
 
             {showHi && (
               <span className="kt-header__topbar-username kt-hidden-mobile">
-                {user.fullname}
+                {user.displayName}
               </span>
             )}
 
-            {showAvatar && <img alt="Pic" src={user.pic} />}
+            {showAvatar && user.photoURL && <img alt="Pic" src={user.photoURL} />}
           </div>
         </Dropdown.Toggle>
         <Dropdown.Menu className="dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround dropdown-menu-xl">

@@ -8,7 +8,7 @@ export default function requireAdmin(WrappedComponent) {
             
             firebase.auth().currentUser.getIdTokenResult().then(result => {
                 if (!result.claims || result.claims.role !== "admin") {
-                    props.history.push('/dashboard');
+                    props.history.push('/instructorVideoUpload');
                 }
             });
         }
