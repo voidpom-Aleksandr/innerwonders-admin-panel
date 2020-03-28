@@ -30,7 +30,7 @@ import firebase, { storageRef } from '../../../services/firebase';
 import moment from 'moment';
 import VideoForm from './VideoForm';
 
-import { CustomSnackbar, customConfirm, customConfirmClose } from '../../../services';
+import { CustomSnackbar, customConfirm, customConfirmClose, getFormatedTime } from '../../../services';
 
 class Videos extends Component {
     constructor(props) {
@@ -349,7 +349,7 @@ class Videos extends Component {
                                                             className="d-block mt-2"
                                                         >
                                                             {
-                                                                `Size: ${this.getReadableFileSizeString(value.videoSize)}  Play: ${value.playCount}  Download: ${value.downloadCount}`
+                                                                `Size: ${this.getReadableFileSizeString(value.videoSize)} Duration: ${getFormatedTime(value.duration)} Play: ${value.playCount}  Download: ${value.downloadCount}`
                                                             }
                                                         </Typography>
 

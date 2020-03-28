@@ -6,4 +6,8 @@ import customConfirm, { customConfirmClose } from './customConfirm';
 
 import firebase from './firebase';
 
-export { instance, CustomSnackbar, customConfirm, customConfirmClose, firebase };
+import {
+    getFormatedTime
+} from './time';
+
+export { instance, CustomSnackbar, customConfirm, customConfirmClose, firebase, getFormatedTime };

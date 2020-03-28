@@ -19,7 +19,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import firebase, { storageRef } from '../../../services/firebase';
 import VideoForm from '../videoUpload/VideoForm';
 
-import { CustomSnackbar, customConfirm, customConfirmClose } from '../../../services';
+import { CustomSnackbar, customConfirm, customConfirmClose, getFormatedTime } from '../../../services';
 
 class InstructorVideoUpload extends Component {
     constructor(props) {
@@ -243,7 +243,7 @@ class InstructorVideoUpload extends Component {
                                                             className="d-block mt-2"
                                                         >
                                                             {
-                                                                `Size: ${this.getReadableFileSizeString(value.videoSize)}  Play: ${value.playCount}  Download: ${value.downloadCount}`
+                                                                `Size: ${this.getReadableFileSizeString(value.videoSize)} Duration: ${getFormatedTime(value.duration)} Play: ${value.playCount}  Download: ${value.downloadCount}`
                                                             }
                                                         </Typography>
 

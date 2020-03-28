@@ -257,6 +257,7 @@ export class VideoForm extends Component {
 
                         onSubmit={(values, { setStatus, setSubmitting }) => {
                             const file = document.getElementById('videoSource').files[0];
+                            const videoDuration = document.getElementById('previewVideoEle').duration;
 
                             if (file && self.state.uploadVideoType === 'upload') {
                                 const videoSource = 'videos/' + new Date().getTime() + '.' + file.name.split('.').pop();
@@ -294,7 +295,8 @@ export class VideoForm extends Component {
                                             video: videoSource,
                                             videoUrl: downloadURL,
                                             videoSize: file.size,
-                                            thumbnail: self.state.uploadedVideoBlogData
+                                            thumbnail: self.state.uploadedVideoBlogData,
+                                            duration: videoDuration
                                         });
 
                                         setSubmitting(false);
@@ -315,7 +317,8 @@ export class VideoForm extends Component {
                                         video: '',
                                         videoUrl: self.state.onlineVideoUrlValue,
                                         videoSize: self.state.onlineVideoSize,
-                                        thumbnail: self.state.uploadedVideoBlogData
+                                        thumbnail: self.state.uploadedVideoBlogData,
+                                        duration: videoDuration
                                     });
 
                                     setSubmitting(false);
