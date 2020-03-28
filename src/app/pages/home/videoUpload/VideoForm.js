@@ -55,6 +55,12 @@ export class VideoForm extends Component {
 
             updates['videos/' + newVideoKey] = videoData;
             firebase.database().ref().update(updates);
+
+            if (this.props.courceKey) {
+                firebase.database().ref('categories/' + this.props.selectedCategoryKey + '/cources/' + this.props.courceKey + '/videoCount').transaction((curVideoCount) => {
+                    return (curVideoCount || 0) + 1;
+                });
+            }
         }
     }
 
@@ -455,7 +461,8 @@ export class VideoForm extends Component {
 }
 
 VideoForm.defaultProps = {
-    videoType: 'normal'
+    videoType: 'normal',
+    selectedCategoryKey: ''
 };
 
 VideoForm.propTypes = {
@@ -463,6 +470,7 @@ VideoForm.propTypes = {
     onClose: PropTypes.func,
     modalInitialValues: PropTypes.object,
     courceKey: PropTypes.string,
+    selectedCategoryKey: PropTypes.string,
     videoType: PropTypes.string
 }
 

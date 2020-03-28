@@ -126,6 +126,10 @@ class Videos extends Component {
                 } else {
                     self.handleDeleteVideoDataOnServer(videoKey, dialogId);
                 }
+                
+                firebase.database().ref('categories/' + this.props.selectedCategoryKey + '/cources/' + snapshot.val().courceKey + '/videoCount').transaction((curVideoCount) => {
+                    return Math.max((curVideoCount || 0) - 1, 0);
+                });
             });
     }
 
@@ -395,6 +399,7 @@ class Videos extends Component {
                     open={this.state.addModalOpenState}
                     onClose={this.toggleAddModalOpen.bind(this, false)}
                     courceKey={this.props.selectedCourceKey}
+                    selectedCategoryKey={this.props.selectedCategoryKey}
                     modalInitialValues={this.state.modalInitialValues} />
 
                 {/* View Comments Modal */}
@@ -587,6 +592,7 @@ class Videos extends Component {
 
 function mapStateToProps(state) {
     return {
+        selectedCategoryKey: state.videoUpload.selectedCategoryKey,
         selectedCourceKey: state.videoUpload.selectedCourceKey,
         videosList: state.videoUpload.currentVideos
     };

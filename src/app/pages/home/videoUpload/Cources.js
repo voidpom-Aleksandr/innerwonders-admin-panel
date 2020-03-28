@@ -163,6 +163,7 @@ class Cources extends Component {
 
             // Write the new post's data simultaneously in the posts list and the user's post list.
             var updates = {};
+            courceData['videoCount'] = 0;
             updates['categories/' + this.props.selectedCategoryKey + '/cources/' + newCourceKey] = courceData;
 
             firebase.database().ref().update(updates);
@@ -252,7 +253,7 @@ class Cources extends Component {
                                                         variant="body1"
                                                         className="d-block"
                                                         style={{ textOverflow: 'ellipsis', overflow: "hidden" }}
-                                                    >{value.name}</Typography>
+                                                    >{value.name} ({value.videoCount || 0})</Typography>
                                                 }
                                                 secondary={
                                                     <Typography
